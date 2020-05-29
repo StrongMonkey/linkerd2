@@ -81,7 +81,6 @@ require (
 	gopkg.in/tchap/go-patricia.v2 v2.3.0 // indirect
 	k8s.io/api v0.0.0-20181213150558-05914d821849
 	k8s.io/apiextensions-apiserver v0.0.0-20181213153335-0fe22c71c476
-	k8s.io/apimachinery v0.0.0-20181127105237-2b1284ed4c93
 	k8s.io/client-go v0.0.0-20181213151034-8d9ed539ba31
 	k8s.io/helm v2.12.2+incompatible
 	k8s.io/klog v0.3.2
