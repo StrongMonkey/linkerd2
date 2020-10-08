@@ -8,7 +8,7 @@ import (
 
 	tsclient "github.com/deislabs/smi-sdk-go/pkg/gen/client/split/clientset/versioned"
 	ts "github.com/deislabs/smi-sdk-go/pkg/gen/client/split/informers/externalversions"
-	tsinformers "github.com/deislabs/smi-sdk-go/pkg/gen/client/split/informers/externalversions/split/v1alpha2"
+	tsinformers "github.com/deislabs/smi-sdk-go/pkg/gen/client/split/informers/externalversions/split/v1alpha1"
 	spv1alpha2 "github.com/linkerd/linkerd2/controller/gen/apis/serviceprofile/v1alpha2"
 	spclient "github.com/linkerd/linkerd2/controller/gen/client/clientset/versioned"
 	sp "github.com/linkerd/linkerd2/controller/gen/client/informers/externalversions"
@@ -196,7 +196,7 @@ func NewAPI(
 			api.svc = sharedInformers.Core().V1().Services()
 			api.syncChecks = append(api.syncChecks, api.svc.Informer().HasSynced)
 		case TS:
-			api.ts = tsSharedInformers.Split().V1alpha2().TrafficSplits()
+			api.ts = tsSharedInformers.Split().V1alpha1().TrafficSplits()
 			api.syncChecks = append(api.syncChecks, api.ts.Informer().HasSynced)
 		}
 	}
@@ -847,7 +847,7 @@ func (api *API) getLeafServices(apex *corev1.Service) ([]*corev1.Service, error)
 	for _, split := range splits {
 		if split.Spec.Service == apex.Name {
 			for _, backend := range split.Spec.Backends {
-				if backend.Weight == 1 {
+				if backend.Weight.Sign() == 1 {
 					svc, err := api.Svc().Lister().Services(apex.Namespace).Get(backend.Service)
 					if err != nil {
 						log.Errorf("TrafficSplit %s/%s references non-existent service %s", apex.Namespace, split.Name, backend.Service)
